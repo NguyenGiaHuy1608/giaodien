@@ -20,18 +20,18 @@
             justify-content: center;
             align-items: center;
             background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 20px;
         }
 
         .container {
             background: white;
             width: 90%;
             max-width: 500px;
-            min-height: 350px;
+            min-height: 450px;
             padding: 40px 30px;
             border-radius: 20px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
         h1 {
@@ -45,8 +45,7 @@
             font-size: 18px;
         }
 
-        .choices,
-        .love-choices {
+        .choices {
             display: flex;
             gap: 15px;
             justify-content: center;
@@ -59,11 +58,7 @@
             font-size: 18px;
             border-radius: 12px;
             cursor: pointer;
-            transition: 0.2s;
-        }
-
-        button:hover {
-            transform: scale(1.05);
+            -webkit-tap-highlight-color: transparent;
         }
 
         .roblox {
@@ -91,7 +86,6 @@
             font-size: 20px;
             font-weight: bold;
             color: #333;
-            min-height: 30px;
         }
 
         #loveQuestion {
@@ -99,12 +93,37 @@
             margin-top: 20px;
         }
 
+        /* Vùng chứa hai nút */
+        #buttonArea {
+            position: relative;
+            height: 220px;
+            width: 100%;
+        }
+
+        /* Ban đầu hai nút nằm cạnh nhau */
+        #yesButton,
+        #noButton {
+            position: absolute;
+            top: 20px;
+        }
+
+        #yesButton {
+            left: 25%;
+            transform: translateX(-50%);
+        }
+
+        #noButton {
+            left: 75%;
+            transform: translateX(-50%);
+        }
+
         #finalMessage {
             display: none;
-            margin-top: 25px;
+            margin-top: 30px;
             font-size: 24px;
             font-weight: bold;
             color: #ff4d88;
+            line-height: 1.5;
         }
 
         .reset {
@@ -112,6 +131,26 @@
             margin-top: 25px;
             background: #eee;
             color: #333;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: 100%;
+                padding: 30px 20px;
+            }
+
+            button {
+                padding: 15px 20px;
+                font-size: 16px;
+            }
+
+            #yesButton {
+                left: 28%;
+            }
+
+            #noButton {
+                left: 72%;
+            }
         }
     </style>
 </head>
@@ -122,18 +161,18 @@
 
         <h1>Hôm nay làm gì pé? 🤔</h1>
 
-        <p id="questionText">
-            Chọn một hoạt động mà bé mún nhé!
-        </p>
+        <p>Chọn một hoạt động mà pé muốn nhé!</p>
 
         <!-- Chọn hoạt động -->
         <div class="choices" id="activityChoices">
 
-            <button class="roblox" onclick="chooseActivity('🎮 Chơi Roblox')">
+            <button class="roblox"
+                onclick="chooseActivity('🎮 Chơi Roblox')">
                 🎮 Chơi Roblox
             </button>
 
-            <button class="movie" onclick="chooseActivity('🍿 Xem phim')">
+            <button class="movie"
+                onclick="chooseActivity('🍿 Xem phim')">
                 🍿 Xem phim
             </button>
 
@@ -149,13 +188,15 @@
                 Bé có yêu anh hong? 🥺❤️
             </p>
 
-            <div class="love-choices">
+            <!-- Khu vực hai nút -->
+            <div id="buttonArea">
 
-                <button class="yes" onclick="sayYes()">
+                <button class="yes" id="yesButton"
+                    onclick="sayYes()">
                     Có ❤️
                 </button>
 
-                <button class="no" id="noButton" onmouseover="moveNoButton()">
+                <button class="no" id="noButton">
                     Không 😝
                 </button>
 
@@ -168,8 +209,9 @@
             Anh cũng yêu bé lắm hihi 🥰❤️
         </div>
 
-        <button class="reset" id="resetBtn" onclick="resetChoice()">
-            Chọn lại 🔄
+        <button class="reset" id="resetBtn"
+            onclick="resetChoice()">
+            Chơi lại 🔄
         </button>
 
     </div>
@@ -177,62 +219,109 @@
 
     <script>
 
-        // Khi chọn Roblox hoặc xem phim
+        const noButton = document.getElementById("noButton");
+        const buttonArea = document.getElementById("buttonArea");
+
+        let noClickCount = 0;
+
+
+        // Chọn hoạt động
         function chooseActivity(activity) {
 
             document.getElementById("result").innerHTML =
                 "Bé đã chọn: <br><br>" + activity + " 🎉";
 
-            // Ẩn lựa chọn hoạt động
-            document.getElementById("activityChoices").style.display = "none";
+            document.getElementById("activityChoices").style.display =
+                "none";
 
-            // Hiện câu hỏi yêu
-            document.getElementById("loveQuestion").style.display = "block";
+            document.getElementById("loveQuestion").style.display =
+                "block";
+
+            // Reset nút Không về vị trí ban đầu
+            noClickCount = 0;
+            noButton.style.display = "inline-block";
+            noButton.style.left = "75%";
+            noButton.style.top = "20px";
+            noButton.style.transform = "translateX(-50%)";
         }
 
 
-        // Khi bé chọn Có
+        // Khi bấm nút Không
+        noButton.addEventListener("click", function() {
+
+            noClickCount++;
+
+            // Bấm 5 lần thì biến mất
+            if (noClickCount >= 5) {
+                noButton.style.display = "none";
+                return;
+            }
+
+            const areaWidth = buttonArea.clientWidth;
+            const areaHeight = buttonArea.clientHeight;
+
+            const buttonWidth = noButton.offsetWidth;
+            const buttonHeight = noButton.offsetHeight;
+
+            const padding = 10;
+
+            // Tạo vị trí ngẫu nhiên trong vùng chứa
+            const maxX = areaWidth - buttonWidth - padding * 2;
+            const maxY = areaHeight - buttonHeight - padding;
+
+            const randomX =
+                Math.floor(Math.random() * maxX) + padding;
+
+            // Cho nút nhảy xuống dưới một chút,
+            // tránh đè lên nút Có
+            const randomY =
+                Math.floor(Math.random() * (maxY - 60)) + 70;
+
+            // Nhảy ngay sang vị trí mới
+            noButton.style.left = randomX + "px";
+            noButton.style.top = randomY + "px";
+            noButton.style.transform = "none";
+        });
+
+
+        // Chọn Có
         function sayYes() {
 
-            // Ẩn câu hỏi
-            document.getElementById("loveQuestion").style.display = "none";
+            document.getElementById("loveQuestion").style.display =
+                "none";
 
-            // Hiện lời yêu
-            document.getElementById("finalMessage").style.display = "block";
+            document.getElementById("finalMessage").style.display =
+                "block";
 
-            // Hiện nút chơi lại
-            document.getElementById("resetBtn").style.display = "inline-block";
+            document.getElementById("resetBtn").style.display =
+                "inline-block";
         }
 
 
-        // Nút Không chạy đi 😆
-        function moveNoButton() {
-
-            const button = document.getElementById("noButton");
-
-            const x = Math.floor(Math.random() * 250) - 125;
-            const y = Math.floor(Math.random() * 150) - 75;
-
-            button.style.transform =
-                `translate(${x}px, ${y}px)`;
-        }
-
-
-        // Chơi lại từ đầu
+        // Chơi lại
         function resetChoice() {
+
+            noClickCount = 0;
 
             document.getElementById("result").innerHTML = "";
 
-            document.getElementById("activityChoices").style.display = "flex";
+            document.getElementById("activityChoices").style.display =
+                "flex";
 
-            document.getElementById("loveQuestion").style.display = "none";
+            document.getElementById("loveQuestion").style.display =
+                "none";
 
-            document.getElementById("finalMessage").style.display = "none";
+            document.getElementById("finalMessage").style.display =
+                "none";
 
-            document.getElementById("resetBtn").style.display = "none";
+            document.getElementById("resetBtn").style.display =
+                "none";
 
-            document.getElementById("noButton").style.transform =
-                "translate(0, 0)";
+            // Đưa nút Không về bên phải
+            noButton.style.display = "inline-block";
+            noButton.style.left = "75%";
+            noButton.style.top = "20px";
+            noButton.style.transform = "translateX(-50%)";
         }
 
     </script>
