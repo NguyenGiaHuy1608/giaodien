@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hôm nay làm gì? 🎮🍿</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .container {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            min-height: 350px;
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 18px;
+        }
+
+        .choices,
+        .love-choices {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            border: none;
+            padding: 18px 25px;
+            font-size: 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        .roblox {
+            background-color: #ff4757;
+            color: white;
+        }
+
+        .movie {
+            background-color: #3742fa;
+            color: white;
+        }
+
+        .yes {
+            background-color: #ff4d88;
+            color: white;
+        }
+
+        .no {
+            background-color: #777;
+            color: white;
+        }
+
+        #result {
+            margin-top: 30px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            min-height: 30px;
+        }
+
+        #loveQuestion {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #finalMessage {
+            display: none;
+            margin-top: 25px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff4d88;
+        }
+
+        .reset {
+            display: none;
+            margin-top: 25px;
+            background: #eee;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Hôm nay làm gì pé? 🤔</h1>
+
+        <p id="questionText">
+            Chọn một hoạt động mà bé mún nhé!
+        </p>
+
+        <!-- Chọn hoạt động -->
+        <div class="choices" id="activityChoices">
+
+            <button class="roblox" onclick="chooseActivity('🎮 Chơi Roblox')">
+                🎮 Chơi Roblox
+            </button>
+
+            <button class="movie" onclick="chooseActivity('🍿 Xem phim')">
+                🍿 Xem phim
+            </button>
+
+        </div>
+
+        <!-- Hiển thị hoạt động đã chọn -->
+        <div id="result"></div>
+
+        <!-- Câu hỏi yêu -->
+        <div id="loveQuestion">
+
+            <p style="font-size: 22px; font-weight: bold;">
+                Bé có yêu anh hong? 🥺❤️
+            </p>
+
+            <div class="love-choices">
+
+                <button class="yes" onclick="sayYes()">
+                    Có ❤️
+                </button>
+
+                <button class="no" id="noButton" onmouseover="moveNoButton()">
+                    Không 😝
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- Tin nhắn cuối -->
+        <div id="finalMessage">
+            Anh cũng yêu bé lắm hihi 🥰❤️
+        </div>
+
+        <button class="reset" id="resetBtn" onclick="resetChoice()">
+            Chọn lại 🔄
+        </button>
+
+    </div>
+
+
+    <script>
+
+        // Khi chọn Roblox hoặc xem phim
+        function chooseActivity(activity) {
+
+            document.getElementById("result").innerHTML =
+                "Bé đã chọn: <br><br>" + activity + " 🎉";
+
+            // Ẩn lựa chọn hoạt động
+            document.getElementById("activityChoices").style.display = "none";
+
+            // Hiện câu hỏi yêu
+            document.getElementById("loveQuestion").style.display = "block";
+        }
+
+
+        // Khi bé chọn Có
+        function sayYes() {
+
+            // Ẩn câu hỏi
+            document.getElementById("loveQuestion").style.display = "none";
+
+            // Hiện lời yêu
+            document.getElementById("finalMessage").style.display = "block";
+
+            // Hiện nút chơi lại
+            document.getElementById("resetBtn").style.display = "inline-block";
+        }
+
+
+        // Nút Không chạy đi 😆
+        function moveNoButton() {
+
+            const button = document.getElementById("noButton");
+
+            const x = Math.floor(Math.random() * 250) - 125;
+            const y = Math.floor(Math.random() * 150) - 75;
+
+            button.style.transform =
+                `translate(${x}px, ${y}px)`;
+        }
+
+
+        // Chơi lại từ đầu
+        function resetChoice() {
+
+            document.getElementById("result").innerHTML = "";
+
+            document.getElementById("activityChoices").style.display = "flex";
+
+            document.getElementById("loveQuestion").style.display = "none";
+
+            document.getElementById("finalMessage").style.display = "none";
+
+            document.getElementById("resetBtn").style.display = "none";
+
+            document.getElementById("noButton").style.transform =
+                "translate(0, 0)";
+        }
+
+    </script>
+
+</body>
+</html>
